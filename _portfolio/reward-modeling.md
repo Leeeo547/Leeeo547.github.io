@@ -4,6 +4,7 @@ title: "Reward Models for VLA Post-Training"
 excerpt: "Turning VLM judgments into dense, real-time rewards for robot policy improvement.<br/><img src='/images/placeholders/reward-modeling.svg'>"
 collection: portfolio
 permalink: /portfolio/reward-modeling
+order: 3
 ---
 
 **Context.** LIDAR Lab, Georgia Tech, with Prof. Ye Zhao. Aug 2025 – present.

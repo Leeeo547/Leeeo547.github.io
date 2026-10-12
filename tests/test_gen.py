@@ -71,6 +71,7 @@ experiences:
       - {text: "Secret bullet.", tags: [data], own: lead, visibility: private, status: ok}
     project_page:
       slug: proj-one
+      order: 1
       title: "Project One"
       teaser: /images/placeholders/proj-one.svg
       excerpt: "Excerpt."
@@ -163,6 +164,7 @@ def test_render_portfolio_body_only():
     assert fname == "proj-one.md"
     assert "collection: portfolio" in content
     assert "permalink: /portfolio/proj-one" in content
+    assert "order: 1" in content
     assert "/images/placeholders/proj-one.svg" in content
     assert "Body **md**." in content
     for b in ("Public ok bullet.", "Pending bullet.", "Secret bullet."):

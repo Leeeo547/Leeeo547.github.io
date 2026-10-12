@@ -172,6 +172,7 @@ experiences:
       - {text: "Additional GIM projects (robot learning / VLA) — to be added after internal review.", tags: [VLA], own: lead, visibility: public, status: TBD}
     project_page:
       slug: robochrono
+      order: 1
       title: "RoboChrono: Streaming Task Understanding on Real Robots"
       teaser: /images/placeholders/robochrono.svg
       excerpt: "A real-robot benchmark probing whether VLMs understand what a robot is doing right now, and what it should do next."
@@ -217,6 +218,7 @@ experiences:
       - {text: "Reward-model numbers (accuracy vs. zero-shot) — add after confirmation.", tags: [VLA], own: lead, visibility: public, status: TBD}
     project_page:
       slug: reward-modeling
+      order: 3
       title: "Reward Models for VLA Post-Training"
       teaser: /images/placeholders/reward-modeling.svg
       excerpt: "Turning VLM judgments into dense, real-time rewards for robot policy improvement."
@@ -256,6 +258,7 @@ experiences:
       - {text: "Sim-to-real grasping success numbers — add when available.", tags: [real-robot], own: lead, visibility: public, status: TBD}
     project_page:
       slug: x-sim
+      order: 2
       title: "Real-to-Sim-to-Real from Phone Video"
       teaser: /images/placeholders/x-sim.svg
       excerpt: "From a 30-second phone video to a physics-ready Gaussian-splat simulation, and back to a real dual-arm robot."
@@ -301,6 +304,7 @@ experiences:
       - {text: "Developed the autonomous Sentinel robot: ROS2 + FreeRTOS, LiDAR/IMU/camera sensor fusion for navigation and engagement.", tags: [systems, real-robot], own: lead, visibility: public, status: ok}
     project_page:
       slug: robomaster
+      order: 4
       title: "RoboMaster: Auto-Aim and Autonomous Sentinel"
       teaser: /images/placeholders/robomaster.svg
       excerpt: "Real-time perception and control on a competition robot: YOLOv8 auto-aim, predictive tracking, ROS2 + FreeRTOS autonomy."

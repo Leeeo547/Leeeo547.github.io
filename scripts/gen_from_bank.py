@@ -224,6 +224,7 @@ def render_portfolio(exp: dict) -> tuple[str, str]:
         ("excerpt", _yq(excerpt)),
         ("collection", "portfolio"),
         ("permalink", f"/portfolio/{page['slug']}"),
+        ("order", str(page.get("order", 99))),
     ]
     body = [page["body_md"].rstrip(), ""]
     return f"{page['slug']}.md", _front_matter(fields) + "\n" + "\n".join(body)

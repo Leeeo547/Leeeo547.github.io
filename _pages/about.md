@@ -16,21 +16,21 @@ redirect_from:
 
 Selected publications
 ======
-{% assign pubs = site.publications | sort: "date" | reverse %}
 <ul>
-{% for p in pubs %}
+{% for category in site.publication_category %}{% for p in site.publications reversed %}{% if p.category != category[0] %}{% continue %}{% endif %}
   <li>
     <a href="{{ base_path }}{{ p.url }}"><b>{{ p.title }}</b></a><br/>
     <small>{{ p.citation }}</small>
     {% if p.paperurl %} <a href="{{ p.paperurl }}">[paper]</a>{% endif %}
   </li>
-{% endfor %}
+{% endfor %}{% endfor %}
 </ul>
 <a href="{{ base_path }}/publications/">All publications →</a>
 
 Selected projects
 ======
-{% for post in site.portfolio %}
+{% assign projects = site.portfolio | sort: "order" %}
+{% for post in projects %}
   {% include archive-single.html %}
 {% endfor %}
 <a href="{{ base_path }}/portfolio/">All projects →</a>

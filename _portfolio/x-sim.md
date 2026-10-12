@@ -4,6 +4,7 @@ title: "Real-to-Sim-to-Real from Phone Video"
 excerpt: "From a 30-second phone video to a physics-ready Gaussian-splat simulation, and back to a real dual-arm robot.<br/><img src='/images/placeholders/x-sim.svg'>"
 collection: portfolio
 permalink: /portfolio/x-sim
+order: 2
 ---
 
 **Context.** Prof. Sehoon Ha's lab, Georgia Tech. Jan 2026 – present.

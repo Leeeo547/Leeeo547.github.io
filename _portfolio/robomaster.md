@@ -4,6 +4,7 @@ title: "RoboMaster: Auto-Aim and Autonomous Sentinel"
 excerpt: "Real-time perception and control on a competition robot: YOLOv8 auto-aim, predictive tracking, ROS2 + FreeRTOS autonomy.<br/><img src='/images/placeholders/robomaster.svg'>"
 collection: portfolio
 permalink: /portfolio/robomaster
+order: 4
 ---
 
 **Context.** HKUST RoboMaster team, Sep 2022 – Oct 2023.

@@ -4,6 +4,7 @@ title: "RoboChrono: Streaming Task Understanding on Real Robots"
 excerpt: "A real-robot benchmark probing whether VLMs understand what a robot is doing right now, and what it should do next.<br/><img src='/images/placeholders/robochrono.svg'>"
 collection: portfolio
 permalink: /portfolio/robochrono
+order: 1
 ---
 
 **Context.** Research Intern at General Intelligence Machine (GIM), Summer 2026 – present.
