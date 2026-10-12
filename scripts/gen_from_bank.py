@@ -20,6 +20,8 @@ ALLOWED_VIS = {"public", "hold"}
 ALLOWED_BULLET_VIS = {"public", "private"}
 ALLOWED_PUB_STATUS = {"under_review", "preprint", "published"}
 ALLOWED_OWN = {"lead", "co", "none"}
+ALLOWED_CATEGORY = {"manuscripts", "preprints"}
+AUTHOR_MARKS = "*†‡ "
 REQ_PUB = ["id", "title", "authors", "me", "venue", "status", "status_text", "category", "date", "abstract_short", "visibility"]
 REQ_EXP = ["id", "org", "role", "start", "end", "kind", "bullets", "visibility"]
 REQ_PAGE = ["slug", "title", "teaser", "excerpt", "body_md"]
@@ -70,9 +72,11 @@ def check_bank(bank: dict, site_root: Path) -> list[str]:
             errs.append(f"publication {pid}: visibility must be one of {sorted(ALLOWED_VIS)}")
         if p.get("status") not in ALLOWED_PUB_STATUS:
             errs.append(f"publication {pid}: status must be one of {sorted(ALLOWED_PUB_STATUS)}")
+        if p.get("category") not in ALLOWED_CATEGORY:
+            errs.append(f"publication {pid}: category must be one of {sorted(ALLOWED_CATEGORY)}")
         if p.get("selected") and p.get("visibility") != "public":
             errs.append(f"publication {pid}: selected=true but visibility is not public")
-        if p.get("me") and p["me"] not in " ".join(p.get("authors", [])):
+        if p.get("me") and p["me"] not in [a.rstrip(AUTHOR_MARKS) for a in p.get("authors", [])]:
             errs.append(f"publication {pid}: 'me' ({p['me']}) not found in authors")
         try:
             _parse_date(p.get("date"))
@@ -159,7 +163,7 @@ def _author_html(pub: dict) -> str:
     me = pub.get("me", "")
     out = []
     for a in pub["authors"]:
-        out.append(f"<b>{a}</b>" if me and a.startswith(me) else a)
+        out.append(f"<b>{a}</b>" if me and a.rstrip(AUTHOR_MARKS) == me else a)
     return ", ".join(out)
 
 
@@ -174,7 +178,9 @@ def render_publication(pub: dict) -> tuple[str, str]:
     date = _parse_date(pub["date"]).isoformat()
     slug = f"{date}-{pub['id']}"
     links = pub.get("links") or {}
-    citation = f"{_author_html(pub)}. {_yq(pub['title'])[1:-1]}. <i>{pub['venue']}</i>. {pub['status_text']}."
+    authors = _author_html(pub)
+    sep = "" if authors.endswith(".") else "."
+    citation = f"{authors}{sep} {pub['title']}. <i>{pub['venue']}</i>. {pub['status_text']}."
     fields = [
         ("title", _yq(pub["title"])),
         ("collection", "publications"),
@@ -263,7 +269,9 @@ def render_cv(bank: dict) -> str:
         links = p.get("links") or {}
         if links.get("arxiv"):
             link = f" [[arXiv]({links['arxiv']})]"
-        out.append(f"* {_author_html(p)}. **{p['title']}**. <i>{p['venue']}</i>. {p['status_text']}.{link}")
+        authors = _author_html(p)
+        sep = "" if authors.endswith(".") else "."
+        out.append(f"* {authors}{sep} **{p['title']}**. <i>{p['venue']}</i>. {p['status_text']}.{link}")
     out.append("")
 
     out += ["Skills", "======"]
@@ -286,7 +294,7 @@ def _remove_stale(folder: Path, keep: set[Path]) -> None:
             head = f.read_text(encoding="utf-8")[:400]
         except OSError:
             continue
-        if "GENERATED" in head:
+        if GENERATED_MARK in head:
             f.unlink()
 
 
