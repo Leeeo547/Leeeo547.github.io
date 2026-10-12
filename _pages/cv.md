@@ -11,6 +11,8 @@ redirect_from:
 
 {% include base_path %}
 
+<a href="{{ base_path }}/files/cv.pdf" class="btn btn--primary">Download PDF</a>
+
 Education
 ======
 * **MSc in Robotics (College of Computing)**, Georgia Institute of Technology, Aug 2025 – May 2027 (expected). GPA 4.0/4.0.
