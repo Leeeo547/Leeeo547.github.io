@@ -7,6 +7,7 @@ permalink: /publication/2026-06-19-vqactflow
 excerpt: 'Under review (revision), IEEE RA-L'
 date: 2026-06-19
 venue: 'IEEE Robotics and Automation Letters (RA-L)'
+selected: true
 paperurl: 'https://arxiv.org/abs/2606.21600'
 citation: 'Zhigen Zhao, Mark Leggiero, Yipu Chen, <b>Haoran Liu</b>, Yifan Wu, Huishu Xue, Sirui Zhan, Ye Zhao. VQActFlow: Vector-Quantized Action Mode Steering for Multi-Task Robot Manipulation. Under review (revision), IEEE RA-L.'
 ---

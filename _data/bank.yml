@@ -1,5 +1,5 @@
 # Experience Bank — single source of truth for this site (and later the CV).
-# PUBLIC FILE. Internal-only notes live in career/bank_private.md (not in this repo).
+# PUBLIC FILE. Internal notes are kept outside this repository.
 # Regenerate pages with:  python scripts/gen_from_bank.py
 # Validate only:           python scripts/gen_from_bank.py --check
 
@@ -30,8 +30,7 @@ profile:
     work is validated on real robots, including Kinova Gen3, Unitree G1, ALOHA-style
     bimanual arms, and GIM's dual-arm platform.
 
-    Before Georgia Tech I studied Mathematics at HKUST (BSc, top 10%), with research
-    stays at UC Berkeley and ETH Zurich.
+    Before Georgia Tech I studied Mathematics at HKUST (BSc, top 10%), with remote research collaborations at UC Berkeley and ETH Zurich.
   interests:
     - Robot manipulation and vision-language-action models
     - Reward and value models for VLA post-training
@@ -162,12 +161,12 @@ experiences:
     role: Research Intern
     start: 2026-06
     end: present
-    location: Remote / on-site
+    location: Remote
     pi: ""
     kind: internship
     tags: [data, real-robot, VLA, systems]
     bullets:
-      - {text: "Built RoboChrono, a real-robot benchmark for streaming task understanding (39 scenarios, 34.7k instances, 18 VLMs evaluated); led teleop data collection, annotation protocol, and the VLM evaluation harness.", tags: [data, real-robot], own: lead, visibility: public, status: ok}
+      - {text: "Core contributor to RoboChrono, a real-robot benchmark for streaming task understanding (39 scenarios, 34.7k instances, 18 VLMs evaluated): led VR-teleop data collection, the annotation/QA protocol, and the VLM evaluation harness.", tags: [data, real-robot], own: lead, visibility: public, status: ok}
       - {text: "Operate GIM's dual-arm whole-workspace platform with VR teleoperation for data collection and policy evaluation.", tags: [real-robot, systems], own: lead, visibility: public, status: ok}
       - {text: "Additional GIM projects (robot learning / VLA) — to be added after internal review.", tags: [VLA], own: lead, visibility: public, status: TBD}
     project_page:
@@ -177,7 +176,7 @@ experiences:
       teaser: /images/placeholders/robochrono.svg
       excerpt: "A real-robot benchmark probing whether VLMs understand what a robot is doing right now, and what it should do next."
       body_md: |
-        **Context.** Research Intern at General Intelligence Machine (GIM), Summer 2026 – present.
+        **Context.** Research Intern at General Intelligence Machine (GIM), Jun 2026 – present.
 
         **What it is.** RoboChrono asks vision-language models seven questions about a live robot
         stream, under a causal protocol (only frames up to time *t* are visible): what is the robot
@@ -344,31 +343,9 @@ experiences:
       - {text: "Positional-encoding scheme for lexicographic rule hierarchies in autonomous-vehicle decision making.", tags: [theory], own: co, visibility: public, status: ok}
     visibility: public
 
-  - id: skill_loop
-    org: Georgia Institute of Technology (capstone)
-    role: Lead
-    start: 2026-01
-    end: present
-    location: Atlanta, GA
-    pi: ""
-    kind: project
-    tags: [VLA, systems]
-    bullets:
-      - {text: "SKILL-LOOP — closed-loop agentic manipulation (held until cleared).", tags: [VLA], own: lead, visibility: private, status: ok}
-    visibility: hold
+  - {id: skill_loop, visibility: hold}
 
-  - id: ara
-    org: Georgia Institute of Technology
-    role: Collaborator
-    start: 2026-03
-    end: present
-    location: Atlanta, GA
-    pi: ""
-    kind: research
-    tags: [perception]
-    bullets:
-      - {text: "ARA — query-aware frame selector for video-LLMs (held until collaborators agree).", tags: [perception], own: co, visibility: private, status: ok}
-    visibility: hold
+  - {id: ara, visibility: hold}
 
 skills:
   ml: [PyTorch, JAX, Hugging Face Transformers / PEFT (LoRA), GRPO / PPO, Flow matching & diffusion policies, LeRobot]

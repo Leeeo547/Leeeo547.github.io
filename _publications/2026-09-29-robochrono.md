@@ -7,6 +7,7 @@ permalink: /publication/2026-09-29-robochrono
 excerpt: 'arXiv preprint, September 2026'
 date: 2026-09-29
 venue: 'arXiv preprint'
+selected: true
 paperurl: 'https://arxiv.org/abs/2609.36605'
 citation: 'Yuzhou Wu, Longteng Fan, Zimeng Li, Yu Wanchan, Ting Zhang, Yiyang Ma, Shihao Li, Wei Ying, Jianbin Qin, Jiajian Jing, Fangwen Chen, Yifan Wu, Zichen Zhang, Ruiqi Yang, Weibin Kong, Yihang Xu, <b>Haoran Liu</b>, Zonghang He, Xuyang Liu, YiFan Xiong, Siteng Huang, Tao Xu, Zhuo Xu, Long Chen, Ruoxiang Li. RoboChrono: A Real Robot Benchmark for Streaming Task Understanding. arXiv preprint, September 2026.'
 ---

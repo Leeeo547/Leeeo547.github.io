@@ -11,8 +11,6 @@ redirect_from:
 
 {% include base_path %}
 
-<a href="{{ base_path }}/files/cv.pdf" class="btn btn--primary">Download PDF</a>
-
 Education
 ======
 * **MSc in Robotics (College of Computing)**, Georgia Institute of Technology, Aug 2025 – May 2027 (expected). GPA 4.0/4.0.
@@ -23,7 +21,7 @@ Education
 Research & Work Experience
 ======
 * **Research Intern**, General Intelligence Machine (GIM) — Jun 2026 – present
-  * Built RoboChrono, a real-robot benchmark for streaming task understanding (39 scenarios, 34.7k instances, 18 VLMs evaluated); led teleop data collection, annotation protocol, and the VLM evaluation harness.
+  * Core contributor to RoboChrono, a real-robot benchmark for streaming task understanding (39 scenarios, 34.7k instances, 18 VLMs evaluated): led VR-teleop data collection, the annotation/QA protocol, and the VLM evaluation harness.
   * Operate GIM's dual-arm whole-workspace platform with VR teleoperation for data collection and policy evaluation.
 * **Graduate Research Assistant**, Georgia Institute of Technology (PI: Prof. Sehoon Ha) — Jan 2026 – present
   * Built a real-to-sim-to-real pipeline (X-Sim style): phone video → COLMAP → 2D Gaussian Splatting → watertight mesh → SAPIEN/ManiSkill scene with CoACD collision and auto-generated URDF.

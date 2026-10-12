@@ -1,10 +1,10 @@
 {
-  "name": "academic-pages",
+  "name": "leeeo547.github.io",
   "version": "0.8.1.1",
   "description": "Academic Pages Mistakes Jekyll theme npm build scripts",
   "repository": {
     "type": "git",
-    "url": "https://github.com/academicpages/academicpages.github.io"
+    "url": "https://github.com/Leeeo547/Leeeo547.github.io"
   },
   "keywords": [
     "jekyll",
@@ -17,9 +17,9 @@
   ],
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/academicpages/academicpages.github.io/issues"
+    "url": "https://github.com/Leeeo547/Leeeo547.github.io/issues"
   },
-  "homepage": "https://github.com/academicpages/academicpages.github.io",
+  "homepage": "https://github.com/Leeeo547/Leeeo547.github.io",
   "engines": {
     "node": ">= 0.10.0"
   },
@@ -30,7 +30,7 @@
   "devDependencies": {
     "jslint": "^0.12.1",
     "onchange": "^7.1.0",
-    "uglify-js": "^3.19.3"    
+    "uglify-js": "^3.19.3"
   },
   "scripts": {
     "uglify": "uglifyjs node_modules/jquery/dist/jquery.min.js assets/js/plugins/jquery.greedy-navigation.js assets/js/_main.js assets/js/theme.js -c -m -o assets/js/main.min.js",

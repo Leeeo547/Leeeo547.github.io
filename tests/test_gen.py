@@ -198,7 +198,7 @@ def test_render_cv_skips_hold_and_private():
     assert "Org" in cv and "Public ok bullet." in cv
     assert "Hidden Org" not in cv and "HIDDEN_MARKER" not in cv
     assert "Secret bullet." not in cv and "Pending bullet." not in cv
-    assert "/files/cv.pdf" in cv
+    assert "/files/cv.pdf" not in cv   # no real PDF -> no button (see test_cv_pdf_button_only_for_real_pdf)
 
 
 def test_generate_writes_expected_files(site):
@@ -286,3 +286,156 @@ def test_cli_check_mode_exit_codes(site):
     bad["experiences"][0]["visibility"] = "nope"
     bank_path.write_text(yaml.safe_dump(bad, sort_keys=False), encoding="utf-8")
     assert g.main(["--check", "--bank", str(bank_path), "--root", str(site)]) == 1
+
+
+# ----------------------------------------------------------------------------- final-review fixes
+
+def test_check_accepts_hold_stub(site):
+    bank = copy.deepcopy(MINI_BANK)
+    bank["experiences"].append({"id": "x", "visibility": "hold"})
+    bank["publications"].append({"id": "px", "visibility": "hold"})
+    assert g.check_bank(bank, site) == []
+    g.render_cv(bank)  # renderers tolerate stubs
+
+
+def test_check_null_bullets_reports_error_not_exception(site):
+    bank = copy.deepcopy(MINI_BANK)
+    bank["experiences"][0]["bullets"] = None
+    errs = g.check_bank(bank, site)
+    assert any("bullets" in e for e in errs)
+
+
+def test_check_null_fields_no_crash(site):
+    bank = copy.deepcopy(MINI_BANK)
+    p = bank["publications"][0]
+    p["my_role"] = None
+    p["links"] = None
+    p["highlights"] = None
+    bank["education"][0]["notes"] = None
+    del bank["education"][0]["gpa"]
+    bank["skills"]["ml"] = None
+    errs = g.check_bank(bank, site)
+    assert any("skills" in e for e in errs)
+    g.render_cv(bank)
+    bank["publications"][1]["authors"] = None
+    errs = g.check_bank(bank, site)
+    assert any("authors" in e for e in errs)
+
+
+def test_check_education_required_fields(site):
+    bank = copy.deepcopy(MINI_BANK)
+    del bank["education"][0]["school"]
+    errs = g.check_bank(bank, site)
+    assert any("education" in e and "school" in e for e in errs)
+
+
+def test_render_publication_null_highlights():
+    pub = copy.deepcopy(MINI_BANK["publications"][0])
+    pub["highlights"] = None
+    pub["my_role"] = None
+    pub["links"] = None
+    _, content = g.render_publication(pub)
+    assert "Highlights" not in content
+
+
+def test_category_derived_from_status():
+    pub = copy.deepcopy(MINI_BANK["publications"][1])
+    pub["status"] = "published"
+    del pub["category"]
+    _, content = g.render_publication(pub)
+    assert "category: published" in content
+
+
+def test_check_category_contradicting_status(site):
+    bank = copy.deepcopy(MINI_BANK)
+    bank["publications"][1]["category"] = "manuscripts"   # status: preprint
+    errs = g.check_bank(bank, site)
+    assert any("category" in e for e in errs)
+    bank = copy.deepcopy(MINI_BANK)
+    for p in bank["publications"]:
+        del p["category"]
+    assert g.check_bank(bank, site) == []
+
+
+def test_selected_flag_rendered():
+    _, c1 = g.render_publication(MINI_BANK["publications"][0])
+    assert "selected: true" in c1
+    _, c2 = g.render_publication(MINI_BANK["publications"][1])
+    assert "selected: false" in c2
+    pub = copy.deepcopy(MINI_BANK["publications"][0])
+    del pub["selected"]
+    _, c3 = g.render_publication(pub)
+    assert "selected: true" in c3
+
+
+def test_denylist_hit_in_public_bullet(site):
+    bank = copy.deepcopy(MINI_BANK)
+    bank["experiences"][0]["bullets"][0]["text"] = "Worked at a Hospital."
+    errs = g.check_bank(bank, site)
+    assert any("e1" in e and "hospital" in e.lower() for e in errs)
+
+
+def test_denylist_ara_word_case_sensitive(site):
+    bank = copy.deepcopy(MINI_BANK)
+    bank["experiences"][0]["project_page"]["body_md"] = "The ARA project."
+    errs = g.check_bank(bank, site)
+    assert any("ARA" in e for e in errs)
+    bank["experiences"][0]["project_page"]["body_md"] = "SARM2 and para."
+    assert g.check_bank(bank, site) == []
+
+
+def test_denylist_skips_hold_items(site):
+    bank = copy.deepcopy(MINI_BANK)
+    bank["experiences"][1]["bullets"][0]["text"] = "skill-loop hospital"
+    assert g.check_bank(bank, site) == []
+
+
+def test_lidar_percent_rule(site):
+    bank = copy.deepcopy(MINI_BANK)
+    bank["experiences"][0]["bullets"][0]["text"] = "Reward model reaches 87% accuracy."
+    assert g.check_bank(bank, site) == []          # id e1: allowed
+    bank["experiences"][0]["id"] = "gim"
+    assert g.check_bank(bank, site) == []
+    bank["experiences"][0]["id"] = "lidar"
+    errs = g.check_bank(bank, site)
+    assert any("lidar" in e and "%" in e for e in errs)
+
+
+def test_liquid_guard(site):
+    for bad in ("a {{ x }}", "{% raw %}", "end %}", "b }}"):
+        bank = copy.deepcopy(MINI_BANK)
+        bank["publications"][0]["abstract_short"] = bad
+        errs = g.check_bank(bank, site)
+        assert any("Liquid" in e or "liquid" in e for e in errs), bad
+
+
+def test_duplicate_ids_and_order(site):
+    bank = copy.deepcopy(MINI_BANK)
+    bank["publications"].append(copy.deepcopy(bank["publications"][0]))
+    errs = g.check_bank(bank, site)
+    assert any("duplicate publication id" in e for e in errs)
+
+    bank = copy.deepcopy(MINI_BANK)
+    dup = copy.deepcopy(bank["experiences"][0])
+    bank["experiences"].append(dup)
+    errs = g.check_bank(bank, site)
+    assert any("duplicate experience id" in e for e in errs)
+
+    bank = copy.deepcopy(MINI_BANK)
+    other = copy.deepcopy(bank["experiences"][0])
+    other["id"] = "e3"
+    other["project_page"]["slug"] = "proj-two"
+    bank["experiences"].append(other)
+    errs = g.check_bank(bank, site)
+    assert any("duplicate project order" in e for e in errs)
+
+
+def test_cv_pdf_button_only_for_real_pdf(site):
+    (site / "files").mkdir()
+    pdf = site / "files" / "cv.pdf"
+    assert "Download PDF" not in g.render_cv(MINI_BANK, site_root=site)
+    pdf.write_bytes(b"x" * 100)
+    assert "Download PDF" not in g.render_cv(MINI_BANK, site_root=site)
+    pdf.write_bytes(b"x" * 5000)
+    assert "Download PDF" in g.render_cv(MINI_BANK, site_root=site)
+    assert "Download PDF" not in g.render_cv(MINI_BANK)

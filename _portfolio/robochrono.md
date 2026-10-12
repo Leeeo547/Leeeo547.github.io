@@ -7,7 +7,7 @@ permalink: /portfolio/robochrono
 order: 1
 ---
 
-**Context.** Research Intern at General Intelligence Machine (GIM), Summer 2026 – present.
+**Context.** Research Intern at General Intelligence Machine (GIM), Jun 2026 – present.
 
 **What it is.** RoboChrono asks vision-language models seven questions about a live robot
 stream, under a causal protocol (only frames up to time *t* are visible): what is the robot

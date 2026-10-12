@@ -35,6 +35,7 @@ jobs:
           bundler-cache: true
           cache-version: 0
       - name: Configure GitHub Pages
+        id: pages
         uses: actions/configure-pages@v6.0.0
       - name: Build with Jekyll
         # Outputs to the './_site' directory by default

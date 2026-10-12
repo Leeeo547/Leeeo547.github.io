@@ -17,7 +17,7 @@ redirect_from:
 Selected publications
 ======
 <ul>
-{% for category in site.publication_category %}{% for p in site.publications reversed %}{% if p.category != category[0] %}{% continue %}{% endif %}
+{% for category in site.publication_category %}{% for p in site.publications reversed %}{% if p.category != category[0] %}{% continue %}{% endif %}{% unless p.selected %}{% continue %}{% endunless %}
   <li>
     <a href="{{ base_path }}{{ p.url }}"><b>{{ p.title }}</b></a><br/>
     <small>{{ p.citation }}</small>

@@ -4,12 +4,14 @@
     python scripts/gen_from_bank.py --check    # validate only, exit 1 on errors
 
 Only items with visibility == "public" are rendered. Bullets with status == "TBD"
-or visibility != "public" are never rendered.
+or visibility != "public" are never rendered. Items with visibility == "hold" may be
+bare stubs ({id, visibility: hold}) and are neither validated nor rendered.
 """
 from __future__ import annotations
 
 import argparse
 import datetime as dt
+import re
 import sys
 from pathlib import Path
 
@@ -20,11 +22,20 @@ ALLOWED_VIS = {"public", "hold"}
 ALLOWED_BULLET_VIS = {"public", "private"}
 ALLOWED_PUB_STATUS = {"under_review", "preprint", "published"}
 ALLOWED_OWN = {"lead", "co", "none"}
-ALLOWED_CATEGORY = {"manuscripts", "preprints"}
+STATUS_CATEGORY = {"published": "published", "under_review": "manuscripts", "preprint": "preprints"}
 AUTHOR_MARKS = "*†‡ "
-REQ_PUB = ["id", "title", "authors", "me", "venue", "status", "status_text", "category", "date", "abstract_short", "visibility"]
+REQ_PUB = ["id", "title", "authors", "me", "venue", "status", "status_text", "date", "abstract_short", "visibility"]
 REQ_EXP = ["id", "org", "role", "start", "end", "kind", "bullets", "visibility"]
 REQ_PAGE = ["slug", "title", "teaser", "excerpt", "body_md"]
+REQ_EDU = ["school", "degree", "field", "start", "end"]
+# Terms that must never appear on the public site. Assembled from fragments so the
+# repository itself does not contain them verbatim (keeps `git grep` audits clean).
+DENY_SUBSTR = ["skill" + "-loop", "skill" + "_loop", "frame" + " selector", "hospital", "career" + "/", "bank" + "_private"]
+DENY_WORD = re.compile(r"\bARA\b")
+LIQUID_TOKENS = ["{{", "{%", "}}", "%}"]
+NO_PERCENT_IDS = {"lidar"}   # reward-modeling numbers are not cleared for publication
+PERCENT_RE = re.compile(r"\d+(\.\d+)?\s*%")
+CV_PDF_MIN_BYTES = 2048      # the placeholder cv.pdf is ~500 B
 
 
 # ----------------------------------------------------------------------------- load / check
@@ -34,13 +45,22 @@ def load_bank(path: Path) -> dict:
         return yaml.safe_load(f)
 
 
-def _is_public(item: dict) -> bool:
-    return item.get("visibility") == "public"
+def _is_public(item) -> bool:
+    return isinstance(item, dict) and item.get("visibility") == "public"
+
+
+def _is_hold(item) -> bool:
+    return isinstance(item, dict) and item.get("visibility") == "hold"
+
+
+def _category(pub: dict) -> str:
+    return STATUS_CATEGORY.get(pub.get("status"), "manuscripts")
 
 
 def _public_bullets(exp: dict) -> list[dict]:
-    return [b for b in exp.get("bullets", [])
-            if b.get("visibility") == "public" and str(b.get("status", "ok")).upper() != "TBD"]
+    return [b for b in (exp.get("bullets") or [])
+            if isinstance(b, dict) and b.get("visibility") == "public"
+            and str(b.get("status", "ok")).upper() != "TBD"]
 
 
 def _parse_date(value) -> dt.date:
@@ -54,63 +74,102 @@ def _parse_date(value) -> dt.date:
     return dt.date.fromisoformat(s)
 
 
-def check_bank(bank: dict, site_root: Path) -> list[str]:
+def _strings(obj):
+    """Yield every string value found recursively in obj (mapping keys excluded)."""
+    if isinstance(obj, str):
+        yield obj
+    elif isinstance(obj, dict):
+        for v in obj.values():
+            yield from _strings(v)
+    elif isinstance(obj, (list, tuple)):
+        for v in obj:
+            yield from _strings(v)
+
+
+def _content_errors(label: str, obj, no_percent: bool = False) -> list[str]:
+    """Denylist, Liquid-delimiter and (optionally) percentage checks over all strings in obj."""
     errs: list[str] = []
+    for text in _strings(obj):
+        low = text.lower()
+        for term in DENY_SUBSTR:
+            if term in low:
+                errs.append(f"{label}: denylisted term '{term}' found")
+        if DENY_WORD.search(text):
+            errs.append(f"{label}: denylisted term 'ARA' found")
+        for tok in LIQUID_TOKENS:
+            if tok in text:
+                errs.append(f"{label}: Liquid delimiter '{tok}' found (breaks Jekyll rendering)")
+        if no_percent and ("%" in text or PERCENT_RE.search(text)):
+            errs.append(f"{label}: '%' / percentage numbers not allowed here: {text[:60]!r}")
+    return list(dict.fromkeys(errs))
 
-    for key in ("profile", "education", "publications", "experiences", "skills"):
-        if key not in bank:
-            errs.append(f"top-level key missing: {key}")
-    if errs:
-        return errs
 
-    for p in bank["publications"]:
-        pid = p.get("id", "<no id>")
-        for k in REQ_PUB:
-            if k not in p:
-                errs.append(f"publication {pid}: missing field '{k}'")
-        if p.get("visibility") not in ALLOWED_VIS:
-            errs.append(f"publication {pid}: visibility must be one of {sorted(ALLOWED_VIS)}")
-        if p.get("status") not in ALLOWED_PUB_STATUS:
-            errs.append(f"publication {pid}: status must be one of {sorted(ALLOWED_PUB_STATUS)}")
-        if p.get("category") not in ALLOWED_CATEGORY:
-            errs.append(f"publication {pid}: category must be one of {sorted(ALLOWED_CATEGORY)}")
-        if p.get("selected") and p.get("visibility") != "public":
-            errs.append(f"publication {pid}: selected=true but visibility is not public")
-        if p.get("me") and p["me"] not in [a.rstrip(AUTHOR_MARKS) for a in p.get("authors", [])]:
-            errs.append(f"publication {pid}: 'me' ({p['me']}) not found in authors")
+def _check_publication(p: dict, errs: list[str]) -> None:
+    pid = p.get("id", "<no id>")
+    for k in REQ_PUB:
+        if k not in p:
+            errs.append(f"publication {pid}: missing field '{k}'")
+    if p.get("status") not in ALLOWED_PUB_STATUS:
+        errs.append(f"publication {pid}: status must be one of {sorted(ALLOWED_PUB_STATUS)}")
+    elif "category" in p and p["category"] != _category(p):
+        errs.append(f"publication {pid}: category '{p['category']}' contradicts status "
+                    f"'{p['status']}' (expected '{_category(p)}'; category may be omitted)")
+    authors = p.get("authors")
+    if not isinstance(authors, list) or not authors:
+        errs.append(f"publication {pid}: authors must be a non-empty list")
+        authors = []
+    if p.get("me") and p["me"] not in [str(a).rstrip(AUTHOR_MARKS) for a in authors]:
+        errs.append(f"publication {pid}: 'me' ({p['me']}) not found in authors")
+    try:
+        _parse_date(p.get("date"))
+    except Exception:
+        errs.append(f"publication {pid}: bad date {p.get('date')!r}")
+    links = p.get("links") or {}
+    if not isinstance(links, dict):
+        errs.append(f"publication {pid}: links must be a mapping")
+        links = {}
+    for name, url in links.items():
+        if not str(url).startswith("https://"):
+            errs.append(f"publication {pid}: link '{name}' must start with https:// (got {url})")
+    for k in ("highlights", "my_role"):
+        if p.get(k) is not None and not isinstance(p[k], list):
+            errs.append(f"publication {pid}: {k} must be a list")
+    my_role = p.get("my_role") if isinstance(p.get("my_role"), list) else []
+    for r in my_role:
+        if not isinstance(r, dict) or r.get("own") not in ALLOWED_OWN:
+            errs.append(f"publication {pid}: my_role own must be one of {sorted(ALLOWED_OWN)}")
+    errs += _content_errors(f"publication {pid}", p)
+
+
+def _check_experience(e: dict, site_root: Path, seen_slugs: set, seen_orders: dict, errs: list[str]) -> None:
+    eid = e.get("id", "<no id>")
+    for k in REQ_EXP:
+        if k not in e:
+            errs.append(f"experience {eid}: missing field '{k}'")
+    for when in ("start", "end"):
         try:
-            _parse_date(p.get("date"))
+            _parse_date(e.get(when))
         except Exception:
-            errs.append(f"publication {pid}: bad date {p.get('date')!r}")
-        for name, url in (p.get("links") or {}).items():
-            if not str(url).startswith("https://"):
-                errs.append(f"publication {pid}: link '{name}' must start with https:// (got {url})")
-        for r in p.get("my_role", []):
-            if r.get("own") not in ALLOWED_OWN:
-                errs.append(f"publication {pid}: my_role own must be one of {sorted(ALLOWED_OWN)}")
-
-    seen_slugs: set[str] = set()
-    for e in bank["experiences"]:
-        eid = e.get("id", "<no id>")
-        for k in REQ_EXP:
-            if k not in e:
-                errs.append(f"experience {eid}: missing field '{k}'")
-        if e.get("visibility") not in ALLOWED_VIS:
-            errs.append(f"experience {eid}: visibility must be one of {sorted(ALLOWED_VIS)}")
-        for when in ("start", "end"):
-            try:
-                _parse_date(e.get(when))
-            except Exception:
-                errs.append(f"experience {eid}: bad {when} {e.get(when)!r}")
-        for i, b in enumerate(e.get("bullets", [])):
-            if "text" not in b:
-                errs.append(f"experience {eid}: bullet {i} missing text")
-            if b.get("visibility") not in ALLOWED_BULLET_VIS:
-                errs.append(f"experience {eid}: bullet {i} visibility must be one of {sorted(ALLOWED_BULLET_VIS)}")
-            if b.get("own") not in ALLOWED_OWN:
-                errs.append(f"experience {eid}: bullet {i} own must be one of {sorted(ALLOWED_OWN)}")
-        page = e.get("project_page")
-        if page and _is_public(e):
+            errs.append(f"experience {eid}: bad {when} {e.get(when)!r}")
+    bullets = e.get("bullets")
+    if not isinstance(bullets, list):
+        errs.append(f"experience {eid}: bullets must be a list (got {type(bullets).__name__})")
+        bullets = []
+    for i, b in enumerate(bullets):
+        if not isinstance(b, dict):
+            errs.append(f"experience {eid}: bullet {i} is not a mapping")
+            continue
+        if "text" not in b:
+            errs.append(f"experience {eid}: bullet {i} missing text")
+        if b.get("visibility") not in ALLOWED_BULLET_VIS:
+            errs.append(f"experience {eid}: bullet {i} visibility must be one of {sorted(ALLOWED_BULLET_VIS)}")
+        if b.get("own") not in ALLOWED_OWN:
+            errs.append(f"experience {eid}: bullet {i} own must be one of {sorted(ALLOWED_OWN)}")
+    page = e.get("project_page")
+    if page and _is_public(e):
+        if not isinstance(page, dict):
+            errs.append(f"experience {eid}: project_page must be a mapping")
+        else:
             for k in REQ_PAGE:
                 if k not in page:
                     errs.append(f"experience {eid}: project_page missing '{k}'")
@@ -118,24 +177,106 @@ def check_bank(bank: dict, site_root: Path) -> list[str]:
             if slug in seen_slugs:
                 errs.append(f"experience {eid}: duplicate project_page slug '{slug}'")
             seen_slugs.add(slug)
+            order = page.get("order", 99)
+            if order in seen_orders:
+                errs.append(f"experience {eid}: duplicate project order {order} (also used by {seen_orders[order]})")
+            seen_orders[order] = eid
             teaser = str(page.get("teaser", ""))
             if not (site_root / teaser.lstrip("/")).exists():
                 errs.append(f"experience {eid}: teaser file not found: {teaser}")
+    errs += _content_errors(f"experience {eid}", e, no_percent=eid in NO_PERCENT_IDS)
 
-    for link_name, url in (bank["profile"].get("links") or {}).items():
-        if not str(url).startswith("https://"):
-            errs.append(f"profile link '{link_name}' must start with https://")
+
+def check_bank(bank: dict, site_root: Path) -> list[str]:
+    errs: list[str] = []
+    if not isinstance(bank, dict):
+        return ["bank is not a mapping"]
+
+    for key in ("profile", "education", "publications", "experiences", "skills"):
+        if bank.get(key) is None:
+            errs.append(f"top-level key missing: {key}")
+    if errs:
+        return errs
+
+    seen_pub_ids: set = set()
+    for p in bank["publications"]:
+        if not isinstance(p, dict):
+            errs.append(f"publication entry is not a mapping: {p!r}")
+            continue
+        pid = p.get("id", "<no id>")
+        if pid in seen_pub_ids:
+            errs.append(f"duplicate publication id '{pid}'")
+        seen_pub_ids.add(pid)
+        if p.get("visibility") not in ALLOWED_VIS:
+            errs.append(f"publication {pid}: visibility must be one of {sorted(ALLOWED_VIS)}")
+        if p.get("selected") and p.get("visibility") != "public":
+            errs.append(f"publication {pid}: selected=true but visibility is not public")
+        if _is_hold(p):
+            continue
+        _check_publication(p, errs)
+
+    seen_exp_ids: set = set()
+    seen_slugs: set = set()
+    seen_orders: dict = {}
+    for e in bank["experiences"]:
+        if not isinstance(e, dict):
+            errs.append(f"experience entry is not a mapping: {e!r}")
+            continue
+        eid = e.get("id", "<no id>")
+        if eid in seen_exp_ids:
+            errs.append(f"duplicate experience id '{eid}'")
+        seen_exp_ids.add(eid)
+        if e.get("visibility") not in ALLOWED_VIS:
+            errs.append(f"experience {eid}: visibility must be one of {sorted(ALLOWED_VIS)}")
+        if _is_hold(e):
+            continue
+        _check_experience(e, site_root, seen_slugs, seen_orders, errs)
+
+    for i, ed in enumerate(bank["education"]):
+        if not isinstance(ed, dict):
+            errs.append(f"education {i}: entry is not a mapping")
+            continue
+        label = f"education {i} ({ed.get('school', '?')})"
+        for k in REQ_EDU:
+            if k not in ed:
+                errs.append(f"{label}: missing field '{k}'")
+        for when in ("start", "end"):
+            try:
+                _parse_date(ed.get(when))
+            except Exception:
+                errs.append(f"{label}: bad {when} {ed.get(when)!r}")
+        if ed.get("notes") is not None and not isinstance(ed["notes"], list):
+            errs.append(f"{label}: notes must be a list")
+        errs += _content_errors(label, ed)
+
+    skills = bank["skills"]
+    if not isinstance(skills, dict):
+        errs.append("skills must be a mapping")
+    else:
+        for k, v in skills.items():
+            if not isinstance(v, list):
+                errs.append(f"skills.{k} must be a list (got {type(v).__name__})")
+        errs += _content_errors("skills", skills)
+
+    profile = bank["profile"]
+    if not isinstance(profile, dict):
+        errs.append("profile must be a mapping")
+    else:
+        for link_name, url in (profile.get("links") or {}).items():
+            if not str(url).startswith("https://"):
+                errs.append(f"profile link '{link_name}' must start with https://")
+        errs += _content_errors("profile", profile)
     return errs
 
 
 def tbd_report(bank: dict) -> list[str]:
     lines: list[str] = []
-    for p in bank.get("publications", []):
-        if "TBD" in str(p.get("author_note", "")).upper() or "et al." in p.get("authors", []):
+    for p in bank.get("publications") or []:
+        if "TBD" in str(p.get("author_note", "")).upper() or "et al." in (p.get("authors") or []):
             lines.append(f"[publication {p['id']}] author list incomplete: {p.get('authors')}")
-    for e in bank.get("experiences", []):
-        for b in e.get("bullets", []):
-            if str(b.get("status", "ok")).upper() == "TBD":
+    for e in bank.get("experiences") or []:
+        for b in e.get("bullets") or []:
+            if isinstance(b, dict) and str(b.get("status", "ok")).upper() == "TBD":
                 lines.append(f"[experience {e['id']}] TBD: {b['text']}")
     return lines
 
@@ -162,7 +303,7 @@ def _fmt_month(value) -> str:
 def _author_html(pub: dict) -> str:
     me = pub.get("me", "")
     out = []
-    for a in pub["authors"]:
+    for a in pub.get("authors") or []:
         out.append(f"<b>{a}</b>" if me and a.rstrip(AUTHOR_MARKS) == me else a)
     return ", ".join(out)
 
@@ -187,25 +328,28 @@ def render_publication(pub: dict) -> tuple[str, str]:
     fields = [
         ("title", _yq(pub["title"])),
         ("collection", "publications"),
-        ("category", pub["category"]),
+        ("category", _category(pub)),
         ("permalink", f"/publication/{slug}"),
         ("excerpt", _sq(pub["status_text"])),
         ("date", date),
         ("venue", _sq(pub["venue"])),
+        ("selected", "false" if pub.get("selected") is False else "true"),
     ]
     paper = links.get("arxiv") or links.get("pdf")
     if paper:
         fields.append(("paperurl", _sq(paper)))
     fields.append(("citation", _sq(citation)))
 
-    body = [pub["abstract_short"].strip(), ""]
-    if pub.get("highlights"):
+    body = [str(pub.get("abstract_short") or "").strip(), ""]
+    highlights = pub.get("highlights") or []
+    my_role = pub.get("my_role") or []
+    if highlights:
         body.append("**Highlights**\n")
-        body += [f"- {h}" for h in pub["highlights"]]
+        body += [f"- {h}" for h in highlights]
         body.append("")
-    if pub.get("my_role"):
+    if my_role:
         body.append("**My contributions**\n")
-        body += [f"- {r['text']}" for r in pub["my_role"]]
+        body += [f"- {r['text']}" for r in my_role]
         body.append("")
     if links:
         pretty = {"arxiv": "arXiv", "pdf": "PDF", "project": "Project page", "code": "Code"}
@@ -230,7 +374,14 @@ def render_portfolio(exp: dict) -> tuple[str, str]:
     return f"{page['slug']}.md", _front_matter(fields) + "\n" + "\n".join(body)
 
 
-def render_cv(bank: dict) -> str:
+def _has_real_cv_pdf(site_root: Path | None) -> bool:
+    if site_root is None:
+        return False
+    pdf = Path(site_root) / "files" / "cv.pdf"
+    return pdf.is_file() and pdf.stat().st_size > CV_PDF_MIN_BYTES
+
+
+def render_cv(bank: dict, site_root: Path | None = None) -> str:
     fm = _front_matter([
         ("layout", "archive"),
         ("title", _yq("CV")),
@@ -238,19 +389,21 @@ def render_cv(bank: dict) -> str:
         ("author_profile", "true"),
         ("redirect_from", "\n  - /resume"),
     ])
-    out = [fm, "", "{% include base_path %}", "",
-           '<a href="{{ base_path }}/files/cv.pdf" class="btn btn--primary">Download PDF</a>', ""]
+    out = [fm, "", "{% include base_path %}", ""]
+    if _has_real_cv_pdf(site_root):
+        out += ['<a href="{{ base_path }}/files/cv.pdf" class="btn btn--primary">Download PDF</a>', ""]
 
     out += ["Education", "======"]
-    for ed in bank["education"]:
+    for ed in bank.get("education") or []:
         end = _fmt_month(ed["end"]) + (" (expected)" if ed.get("expected") else "")
-        out.append(f"* **{ed['degree']} in {ed['field']}**, {ed['school']}, {_fmt_month(ed['start'])} – {end}. GPA {ed['gpa']}.")
-        for n in ed.get("notes", []):
+        gpa = f" GPA {ed['gpa']}." if ed.get("gpa") else ""
+        out.append(f"* **{ed['degree']} in {ed['field']}**, {ed['school']}, {_fmt_month(ed['start'])} – {end}.{gpa}")
+        for n in ed.get("notes") or []:
             out.append(f"  * {n}")
     out.append("")
 
     out += ["Research & Work Experience", "======"]
-    exps = [e for e in bank["experiences"] if _is_public(e)]
+    exps = [e for e in bank.get("experiences") or [] if _is_public(e)]
     exps.sort(key=lambda e: _parse_date(e["start"]), reverse=True)
     for e in exps:
         pi = f" (PI: {e['pi']})" if e.get("pi") else ""
@@ -260,7 +413,7 @@ def render_cv(bank: dict) -> str:
     out.append("")
 
     out += ["Publications", "======"]
-    pubs = [p for p in bank["publications"] if _is_public(p)]
+    pubs = [p for p in bank.get("publications") or [] if _is_public(p)]
     order = {"published": 0, "under_review": 1, "preprint": 2}
     pubs.sort(key=lambda p: (order.get(p["status"], 9), -_parse_date(p["date"]).toordinal()))
     for p in pubs:
@@ -276,8 +429,9 @@ def render_cv(bank: dict) -> str:
 
     out += ["Skills", "======"]
     labels = {"ml": "Machine Learning", "robotics": "Robotics", "perception_3d": "Perception / 3D", "tools": "Tools"}
-    for k, items in bank["skills"].items():
-        out.append(f"* **{labels.get(k, k)}:** {', '.join(items)}")
+    for k, items in (bank.get("skills") or {}).items():
+        if items:
+            out.append(f"* **{labels.get(k, k)}:** {', '.join(items)}")
     out.append("")
     return "\n".join(out)
 
@@ -304,20 +458,20 @@ def generate(bank: dict, site_root: Path) -> list[Path]:
     for d in (pub_dir, port_dir, pages_dir):
         d.mkdir(parents=True, exist_ok=True)
 
-    for p in bank["publications"]:
+    for p in bank.get("publications") or []:
         if not _is_public(p):
             continue
         name, content = render_publication(p)
         (pub_dir / name).write_text(content, encoding="utf-8")
         written.append(pub_dir / name)
-    for e in bank["experiences"]:
+    for e in bank.get("experiences") or []:
         if not (_is_public(e) and e.get("project_page")):
             continue
         name, content = render_portfolio(e)
         (port_dir / name).write_text(content, encoding="utf-8")
         written.append(port_dir / name)
     cv = pages_dir / "cv.md"
-    cv.write_text(render_cv(bank), encoding="utf-8")
+    cv.write_text(render_cv(bank, site_root=site_root), encoding="utf-8")
     written.append(cv)
 
     _remove_stale(pub_dir, set(written))
