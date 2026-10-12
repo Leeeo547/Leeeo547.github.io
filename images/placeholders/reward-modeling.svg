@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="500" height="300" viewBox="0 0 500 300">
+  <rect width="500" height="300" fill="#e9ecef"/>
+  <rect x="10" y="10" width="480" height="280" fill="none" stroke="#adb5bd" stroke-width="2" stroke-dasharray="8 6"/>
+  <text x="250" y="150" font-family="Helvetica, Arial, sans-serif" font-size="24" fill="#495057"
+        text-anchor="middle" dominant-baseline="middle">Reward Modeling for VLA</text>
+  <text x="250" y="190" font-family="Helvetica, Arial, sans-serif" font-size="14" fill="#868e96"
+        text-anchor="middle">figure coming soon</text>
+</svg>
