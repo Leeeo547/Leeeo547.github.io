@@ -1,0 +1,373 @@
+# Experience Bank — single source of truth for this site (and later the CV).
+# PUBLIC FILE. Internal-only notes live in career/bank_private.md (not in this repo).
+# Regenerate pages with:  python scripts/gen_from_bank.py
+# Validate only:           python scripts/gen_from_bank.py --check
+
+profile:
+  name: Haoran (Leo) Liu
+  tagline: MSc Robotics @ Georgia Tech
+  email: hliu852@gatech.edu
+  location: Atlanta, GA
+  links:
+    github: https://github.com/Leeeo547
+    linkedin: https://www.linkedin.com/in/haoran-liu-0a1a29379/
+    orcid: https://orcid.org/0009-0007-7918-0145
+    scholar: https://scholar.google.com/citations?user=BMbTAmkAAAAJ
+  research_statement: >-
+    Closing the loop between perception, language, and action via learned
+    representations and agentic orchestration.
+  bio_long: |
+    I am an MSc Robotics student at Georgia Tech (College of Computing), working on
+    robot learning and embodied AI. I am a Graduate Research Assistant in the LIDAR Lab
+    with Prof. Ye Zhao and in Prof. Sehoon Ha's lab, and a Research Intern at
+    General Intelligence Machine (GIM).
+
+    My research centers on reliably wiring vision-language-model semantics into the
+    robot-learning loop and understanding where it breaks: structured scene
+    understanding with calibrated uncertainty (DLONet), benchmarking the temporal
+    understanding of VLMs on real robot streams (RoboChrono), and steerable
+    discrete action generation for multi-task manipulation (VQActFlow). All of this
+    work is validated on real robots, including Kinova Gen3, Unitree G1, ALOHA-style
+    bimanual arms, and GIM's dual-arm platform.
+
+    Before Georgia Tech I studied Mathematics at HKUST (BSc, top 10%), with research
+    stays at UC Berkeley and ETH Zurich.
+  interests:
+    - Robot manipulation and vision-language-action models
+    - Reward and value models for VLA post-training
+    - Real-to-sim-to-real and simulation from video
+    - Agentic orchestration of robot skills
+
+education:
+  - school: Georgia Institute of Technology
+    degree: MSc
+    field: Robotics (College of Computing)
+    start: 2025-08
+    end: 2027-05
+    expected: true
+    gpa: "4.0/4.0"
+    location: Atlanta, GA
+    notes:
+      - "Coursework: Deep Reinforcement Learning, Deep Learning (CS 7643), Probabilistic Graphical Models, Autonomous Mobile Robots, Machine Learning (CS 7641)"
+      - "Graduate Teaching Assistant, Fall 2026"
+  - school: The Hong Kong University of Science and Technology
+    degree: BSc
+    field: Mathematics
+    start: 2021-09
+    end: 2025-06
+    gpa: "3.8/4.3, top 10%"
+    location: Hong Kong
+    notes: []
+
+publications:
+  - id: dlonet
+    title: "DLONet: Local-to-Global Consistent Occlusion Ordering for Multi-Cable Harness Perception"
+    authors: ["Haoran Liu*", "et al."]
+    me: Haoran Liu
+    author_note: "*Equal contribution. Full author list will appear with the arXiv version."
+    venue: IEEE Robotics and Automation Letters (RA-L)
+    status: under_review
+    status_text: "Under review, IEEE RA-L"
+    category: manuscripts
+    date: 2026-10-01
+    links: {}
+    abstract_short: >-
+      From a single RGB-D image, DLONet densely traces multiple deformable linear
+      objects (cables) and recovers a globally consistent over/under occlusion
+      ordering for wire-harness assembly. A three-stage pipeline (TraceNet →
+      RelationNet → GraphNet) propagates predictions together with their
+      confidences, so local pairwise relations are reconciled into a cycle-free
+      global layer order.
+    highlights:
+      - "Tracing success rate 0.89 vs. 0.67 for HANDLOOM; 94.3% crossing-relation accuracy; 88.6% topologically-correct rate in multi-cable scenes."
+      - "Frontier VLMs (GPT-5.2, Claude Opus 4.6, Qwen2.5-VL-72B) are near chance on multi-cable ordering zero-shot."
+      - "Deployed on a Kinova Gen3 with a RealSense D435i: 90% success on real cable extraction."
+    my_role:
+      - {text: "Designed and trained the three network stages: TraceNet (dense centerline/event/keypoint heatmaps + embedding field, curvature-regularized decoder), RelationNet (event validity, over/under, signed depth with heteroscedastic uncertainty), and GraphNet (message passing to suppress ordering cycles; continuous Layer Field).", own: lead}
+      - {text: "Ran all baseline and VLM evaluations (HANDLOOM reproduction; zero-shot GPT-5.2 / Claude Opus 4.6 / Qwen2.5-VL-72B) and the ablation study.", own: lead}
+      - {text: "Built the Kinova Gen3 + RealSense D435i cable-extraction demo (90% success).", own: lead}
+      - {text: "Co-developed the ~35k-scene synthetic data pipeline (procedural cables, mass–spring relaxation, Blender rendering, auto-annotation) and the 100-scene real MDLO benchmark.", own: co}
+      - {text: "Led writing and rebuttal across the ECCV 2026 and RA-L submissions; owned multi-GPU training infrastructure on Georgia Tech PACE.", own: lead}
+    selected: true
+    visibility: public
+
+  - id: vqactflow
+    title: "VQActFlow: Vector-Quantized Action Mode Steering for Multi-Task Robot Manipulation"
+    authors: ["Zhigen Zhao", "Mark Leggiero", "Yipu Chen", "Haoran Liu", "Yifan Wu", "Huishu Xue", "Sirui Zhan", "Ye Zhao"]
+    me: Haoran Liu
+    author_note: ""
+    venue: IEEE Robotics and Automation Letters (RA-L)
+    status: under_review
+    status_text: "Under review (revision), IEEE RA-L"
+    category: manuscripts
+    date: 2026-06-19
+    links:
+      arxiv: https://arxiv.org/abs/2606.21600
+      project: https://mleggiero.github.io/vqactflow-website
+    abstract_short: >-
+      VQActFlow tokenizes robot actions with a VQ-VAE and trains a diffusion
+      transformer with Variational Flow Matching to predict categorical
+      distributions over the codebook. Because action modes are discrete, the
+      policy can be steered at inference time with classifier-free guidance on
+      language and a lightweight codebook critic.
+    highlights:
+      - "LIBERO-Goal 73.0 → 81.0%; LIBERO-90 80.5% vs. 77.2% (CFM), 72.4% (MT-ACT)."
+      - "Unitree G1 humanoid, 4 pick-and-place tasks: 23.8 → 57.5% success, wrong-task rate 41.3 → 2.5%."
+      - "ALOHA-style bimanual, 4 contact-rich tasks: 45.0 → 77.5%; the CFM baseline failed all four."
+    my_role:
+      - {text: "Led the LIBERO-Goal / LIBERO-90 experiments and the codebook ablation.", own: lead}
+      - {text: "Collected the Unitree G1 teleoperation dataset (TWIST2 VR, 140 demos/task) and led G1 deployment and evaluation on four pick-and-place tasks.", own: lead}
+      - {text: "Ran the ALOHA-style bimanual experiments (four contact-rich tasks, 75 demos/task).", own: lead}
+      - {text: "Engineered inference latency to 155–350 ms per action chunk on an RTX 5090.", own: lead}
+      - {text: "Contributed to the VQ-VAE tokenizer, VFM objective, guidance (CFG + codebook critic), and matched-protocol baseline reproduction (CFM, MT-ACT, VQ-BeT, Discrete Policy + CFG).", own: co}
+      - {text: "Co-wrote the manuscript and the RA-L revision.", own: lead}
+    selected: true
+    visibility: public
+
+  - id: robochrono
+    title: "RoboChrono: A Real Robot Benchmark for Streaming Task Understanding"
+    authors: ["Yuzhou Wu", "Longteng Fan", "Zimeng Li", "Yu Wanchan", "Ting Zhang", "Yiyang Ma", "Shihao Li", "Wei Ying", "Jianbin Qin", "Jiajian Jing", "Fangwen Chen", "Yifan Wu", "Zichen Zhang", "Ruiqi Yang", "Weibin Kong", "Yihang Xu", "Haoran Liu", "Zonghang He", "Xuyang Liu", "YiFan Xiong", "Siteng Huang", "Tao Xu", "Zhuo Xu", "Long Chen", "Ruoxiang Li"]
+    me: Haoran Liu
+    author_note: ""
+    venue: arXiv preprint
+    status: preprint
+    status_text: "arXiv preprint, September 2026"
+    category: preprints
+    date: 2026-09-29
+    links:
+      arxiv: https://arxiv.org/abs/2609.36605
+      project: https://continuity3.github.io/robochrono
+      code: https://github.com/mfan-res/ROBOCHRONO
+    abstract_short: >-
+      RoboChrono is a real-robot benchmark for streaming task understanding:
+      39 scenarios, 34,713 instances and ~25 hours of synchronized head- and
+      wrist-camera video from two dual-arm platforms, with seven causal QA tasks
+      (current/next action, frame and view matching, frame ordering, action time
+      localization) evaluated on 18 VLMs.
+    highlights:
+      - "Best model (GPT-6-Astra) reaches 80.5% average but only 68.3% on Frame Ordering; best open model 62.8%."
+      - "Input ablations show next-action prediction leans on task priors rather than vision."
+    my_role:
+      - {text: "Led VR-teleoperation data collection on GIM's dual-arm whole-workspace platform.", own: lead}
+      - {text: "Designed the human-annotation and QA-template protocol that converts action/state intervals into the seven benchmark tasks.", own: lead}
+      - {text: "Built the VLM evaluation harness and ran the zero-shot evaluation sweep.", own: lead}
+      - {text: "Led results analysis and co-wrote the paper.", own: lead}
+      - {text: "Contributed to scenario design, camera synchronization, input ablations, and the Hugging Face dataset release (gimai/RC-GIM).", own: co}
+    selected: true
+    visibility: public
+
+experiences:
+  - id: gim
+    org: General Intelligence Machine (GIM)
+    role: Research Intern
+    start: 2026-06
+    end: present
+    location: Remote / on-site
+    pi: ""
+    kind: internship
+    tags: [data, real-robot, VLA, systems]
+    bullets:
+      - {text: "Built RoboChrono, a real-robot benchmark for streaming task understanding (39 scenarios, 34.7k instances, 18 VLMs evaluated); led teleop data collection, annotation protocol, and the VLM evaluation harness.", tags: [data, real-robot], own: lead, visibility: public, status: ok}
+      - {text: "Operate GIM's dual-arm whole-workspace platform with VR teleoperation for data collection and policy evaluation.", tags: [real-robot, systems], own: lead, visibility: public, status: ok}
+      - {text: "Additional GIM projects (robot learning / VLA) — to be added after internal review.", tags: [VLA], own: lead, visibility: public, status: TBD}
+    project_page:
+      slug: robochrono
+      title: "RoboChrono: Streaming Task Understanding on Real Robots"
+      teaser: /images/placeholders/robochrono.svg
+      excerpt: "A real-robot benchmark probing whether VLMs understand what a robot is doing right now, and what it should do next."
+      body_md: |
+        **Context.** Research Intern at General Intelligence Machine (GIM), Summer 2026 – present.
+
+        **What it is.** RoboChrono asks vision-language models seven questions about a live robot
+        stream, under a causal protocol (only frames up to time *t* are visible): what is the robot
+        doing now, what comes next, which frame or view matches, in what order did things happen,
+        and when did an action start and end. The data comes from two real dual-arm platforms,
+        collected via VR teleoperation with synchronized head and wrist cameras, and is annotated
+        by humans into action and state intervals.
+
+        **My part.** I led the VR-teleop data collection on GIM's dual-arm whole-workspace platform,
+        designed the annotation and QA-template protocol, built the VLM evaluation harness used for
+        the 18-model sweep, and led the results analysis. I also contributed to scenario design,
+        camera synchronization, the input ablations, and the Hugging Face release.
+
+        **Why it matters.** The best frontier model scores 80.5% on average but drops to 68.3% on
+        frame ordering, and removing vision barely hurts next-action prediction. VLMs still lean on
+        task priors rather than on what they see, which is exactly the failure mode a robot cannot
+        afford.
+
+        Paper: [arXiv 2609.36605](https://arxiv.org/abs/2609.36605) ·
+        [project page](https://continuity3.github.io/robochrono) ·
+        [code](https://github.com/mfan-res/ROBOCHRONO)
+    visibility: public
+
+  - id: lidar
+    org: LIDAR Lab, Georgia Institute of Technology
+    role: Graduate Research Assistant
+    start: 2025-08
+    end: present
+    location: Atlanta, GA
+    pi: Prof. Ye Zhao
+    kind: research
+    tags: [VLA, RL, data, writing]
+    bullets:
+      - {text: "Co-author of VQActFlow (RA-L, in revision): led LIBERO experiments, Unitree G1 teleop data and deployment, ALOHA-style bimanual experiments, and latency engineering.", tags: [VLA, real-robot], own: lead, visibility: public, status: ok}
+      - {text: "Reward modeling for VLA post-training: LoRA-finetuned Qwen3-VL-8B-Instruct for sub-task segmentation and success classification on LIBERO-Spatial; Qwen2.5-VL chain-of-thought reward labeling (criteria → description → analysis → rating).", tags: [VLA, RL], own: lead, visibility: public, status: ok}
+      - {text: "Distilling VLM judgments into lightweight real-time reward models for iterative RL post-training; surveyed and benchmarked recent reward/value-model work (SCORE, ARM, LRM, SARM2, ReTVL, …) and the RBM-1M / Robometer datasets.", tags: [RL, data], own: lead, visibility: public, status: ok}
+      - {text: "Ongoing: coffee-agent, a self-evolving agent that learns a pour-over coffee routine on a real robot, with a critic/reward model guiding policy updates during out-of-distribution exploration.", tags: [RL, real-robot], own: lead, visibility: public, status: ok}
+      - {text: "Reward-model numbers (accuracy vs. zero-shot) — add after confirmation.", tags: [VLA], own: lead, visibility: public, status: TBD}
+    project_page:
+      slug: reward-modeling
+      title: "Reward Models for VLA Post-Training"
+      teaser: /images/placeholders/reward-modeling.svg
+      excerpt: "Turning VLM judgments into dense, real-time rewards for robot policy improvement."
+      body_md: |
+        **Context.** LIDAR Lab, Georgia Tech, with Prof. Ye Zhao. Aug 2025 – present.
+
+        **Problem.** Post-training a vision-language-action policy with RL needs a reward signal
+        that is dense, cheap, and trustworthy on real-robot video. Large VLMs can judge progress
+        but are too slow to query every step and are not calibrated for the task.
+
+        **What I built.**
+        - LoRA fine-tuning of Qwen3-VL-8B-Instruct on LIBERO-Spatial for sub-task segmentation and
+          success/failure classification (QwenLM `qwen-vl-finetune`, Georgia Tech PACE A40/H100).
+        - A four-step chain-of-thought reward-labeling scheme on Qwen2.5-VL
+          (criteria → description → analysis → rating) for consistent progress scores.
+        - A reward-distillation path from VLM labels into lightweight reward models that run in the
+          control loop, plus a robot reward-dataset pipeline built on RBM-1M / Robometer.
+
+        **Ongoing.** *coffee-agent*: a self-evolving agent that improves a pour-over coffee routine on
+        a real robot, using the reward/critic model to guide updates during out-of-distribution
+        exploration.
+    visibility: public
+
+  - id: ha
+    org: Prof. Sehoon Ha's Lab, Georgia Institute of Technology
+    role: Graduate Research Assistant
+    start: 2026-01
+    end: present
+    location: Atlanta, GA
+    pi: Prof. Sehoon Ha
+    kind: research
+    tags: [sim, perception, real-robot, systems]
+    bullets:
+      - {text: "Built a real-to-sim-to-real pipeline (X-Sim style): phone video → COLMAP → 2D Gaussian Splatting → watertight mesh → SAPIEN/ManiSkill scene with CoACD collision and auto-generated URDF.", tags: [sim, perception], own: lead, visibility: public, status: ok}
+      - {text: "Integrated Gaussian-splat environments into Isaac Lab and a Neuromeka NAMI platform (USD scene swap, Zenoh messaging) for sim-trained grasping policies on a mobile dual-arm robot.", tags: [sim, real-robot, systems], own: lead, visibility: public, status: ok}
+      - {text: "Set up Unitree Z1 and G1 developer workflows (SDK build, DDS low/high-level control) and Isaac Lab across lab GPUs.", tags: [real-robot, systems], own: lead, visibility: public, status: ok}
+      - {text: "Sim-to-real grasping success numbers — add when available.", tags: [real-robot], own: lead, visibility: public, status: TBD}
+    project_page:
+      slug: x-sim
+      title: "Real-to-Sim-to-Real from Phone Video"
+      teaser: /images/placeholders/x-sim.svg
+      excerpt: "From a 30-second phone video to a physics-ready Gaussian-splat simulation, and back to a real dual-arm robot."
+      body_md: |
+        **Context.** Prof. Sehoon Ha's lab, Georgia Tech. Jan 2026 – present.
+
+        **Pipeline.** Capture a scene with a phone → COLMAP poses → 2D Gaussian Splatting →
+        mesh extraction → SAPIEN/ManiSkill (CoACD convex decomposition, auto-generated URDF).
+        The same splats are swapped into Isaac Lab via USD for policy training, and the trained
+        grasping policies are deployed on a Neuromeka NAMI mobile dual-arm platform with Zenoh
+        messaging.
+
+        **Hardware.** Neuromeka NAMI, Unitree Z1 / G1 (developer workflows, DDS control).
+
+        **Status.** Pipeline is end-to-end; quantitative sim-to-real results are being finalized.
+    visibility: public
+
+  - id: shunhe
+    org: Shenzhen Shunhe Electric
+    role: Research Scientist Intern
+    start: 2025-06
+    end: 2025-08
+    location: Shenzhen, China
+    pi: ""
+    kind: internship
+    tags: [perception, data]
+    bullets:
+      - {text: "Multi-view video temporal alignment with a Simone-style model and curriculum learning: 99% accuracy on 3-class and >90% on 9-class temporal-offset classification.", tags: [perception], own: lead, visibility: public, status: ok}
+      - {text: "Explored cross-attention fusion and diffusion decoders for cross-view alignment.", tags: [perception], own: lead, visibility: public, status: ok}
+    visibility: public
+
+  - id: robomaster
+    org: HKUST RoboMaster Team
+    role: Vision & Autonomy Engineer
+    start: 2022-09
+    end: 2023-10
+    location: Hong Kong
+    pi: ""
+    kind: project
+    tags: [perception, real-robot, systems]
+    bullets:
+      - {text: "Built the auto-aim pipeline (OpenCV + YOLOv8 on industrial cameras) with predictive target tracking at 7–8 m, improving bullet efficiency by ~80%.", tags: [perception, real-robot], own: lead, visibility: public, status: ok}
+      - {text: "Developed the autonomous Sentinel robot: ROS2 + FreeRTOS, LiDAR/IMU/camera sensor fusion for navigation and engagement.", tags: [systems, real-robot], own: lead, visibility: public, status: ok}
+    project_page:
+      slug: robomaster
+      title: "RoboMaster: Auto-Aim and Autonomous Sentinel"
+      teaser: /images/placeholders/robomaster.svg
+      excerpt: "Real-time perception and control on a competition robot: YOLOv8 auto-aim, predictive tracking, ROS2 + FreeRTOS autonomy."
+      body_md: |
+        **Context.** HKUST RoboMaster team, Sept 2022 – Oct 2023.
+
+        **Auto-aim.** Industrial cameras + OpenCV + YOLOv8 for armor-plate detection, with a
+        predictive tracker for targets at 7–8 m. Bullet efficiency improved by roughly 80%.
+
+        **Autonomous Sentinel.** A fully autonomous robot on ROS2 and FreeRTOS, fusing LiDAR, IMU,
+        and camera for navigation and target engagement under competition latency constraints.
+    visibility: public
+
+  - id: berkeley
+    org: University of California, Berkeley
+    role: Research Assistant (remote)
+    start: 2024-04
+    end: 2024-09
+    location: Remote
+    pi: ""
+    kind: research
+    tags: [theory]
+    bullets:
+      - {text: "Graphlet-based bootstrapping for hypothesis testing against network null models.", tags: [theory], own: co, visibility: public, status: ok}
+    visibility: public
+
+  - id: eth
+    org: ETH Zurich
+    role: Research Assistant (remote)
+    start: 2024-09
+    end: 2025-04
+    location: Remote
+    pi: ""
+    kind: research
+    tags: [theory]
+    bullets:
+      - {text: "Positional-encoding scheme for lexicographic rule hierarchies in autonomous-vehicle decision making.", tags: [theory], own: co, visibility: public, status: ok}
+    visibility: public
+
+  - id: skill_loop
+    org: Georgia Institute of Technology (capstone)
+    role: Lead
+    start: 2026-01
+    end: present
+    location: Atlanta, GA
+    pi: ""
+    kind: project
+    tags: [VLA, systems]
+    bullets:
+      - {text: "SKILL-LOOP — closed-loop agentic manipulation (held until cleared).", tags: [VLA], own: lead, visibility: private, status: ok}
+    visibility: hold
+
+  - id: ara
+    org: Georgia Institute of Technology
+    role: Collaborator
+    start: 2026-03
+    end: present
+    location: Atlanta, GA
+    pi: ""
+    kind: research
+    tags: [perception]
+    bullets:
+      - {text: "ARA — query-aware frame selector for video-LLMs (held until collaborators agree).", tags: [perception], own: co, visibility: private, status: ok}
+    visibility: hold
+
+skills:
+  ml: [PyTorch, JAX, Hugging Face Transformers / PEFT (LoRA), GRPO / PPO, Flow matching & diffusion policies, LeRobot]
+  robotics: [ROS 2, Isaac Lab, ManiSkill / SAPIEN, LIBERO, Unitree G1 / Z1, Kinova Gen3, Neuromeka NAMI, VR teleoperation]
+  perception_3d: [2DGS / 3DGS, COLMAP, SAM 2, GTSAM, OpenCV, YOLO]
+  tools: [Python, C++, Linux, Docker, Slurm (PACE), Blender, LaTeX]
