@@ -28,8 +28,3 @@ afford.
 Paper: [arXiv 2609.36605](https://arxiv.org/abs/2609.36605) ·
 [project page](https://continuity3.github.io/robochrono) ·
 [code](https://github.com/mfan-res/ROBOCHRONO)
-
-**Key points**
-
-- Built RoboChrono, a real-robot benchmark for streaming task understanding (39 scenarios, 34.7k instances, 18 VLMs evaluated); led teleop data collection, annotation protocol, and the VLM evaluation harness.
-- Operate GIM's dual-arm whole-workspace platform with VR teleoperation for data collection and policy evaluation.

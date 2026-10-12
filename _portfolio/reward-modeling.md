@@ -23,10 +23,3 @@ but are too slow to query every step and are not calibrated for the task.
 **Ongoing.** *coffee-agent*: a self-evolving agent that improves a pour-over coffee routine on
 a real robot, using the reward/critic model to guide updates during out-of-distribution
 exploration.
-
-**Key points**
-
-- Co-author of VQActFlow (RA-L, in revision): led LIBERO experiments, Unitree G1 teleop data and deployment, ALOHA-style bimanual experiments, and latency engineering.
-- Reward modeling for VLA post-training: LoRA-finetuned Qwen3-VL-8B-Instruct for sub-task segmentation and success classification on LIBERO-Spatial; Qwen2.5-VL chain-of-thought reward labeling (criteria → description → analysis → rating).
-- Distilling VLM judgments into lightweight real-time reward models for iterative RL post-training; surveyed and benchmarked recent reward/value-model work (SCORE, ARM, LRM, SARM2, ReTVL, …) and the RBM-1M / Robometer datasets.
-- Ongoing: coffee-agent, a self-evolving agent that learns a pour-over coffee routine on a real robot, with a critic/reward model guiding policy updates during out-of-distribution exploration.

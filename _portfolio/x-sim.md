@@ -17,9 +17,3 @@ messaging.
 **Hardware.** Neuromeka NAMI, Unitree Z1 / G1 (developer workflows, DDS control).
 
 **Status.** Pipeline is end-to-end; quantitative sim-to-real results are being finalized.
-
-**Key points**
-
-- Built a real-to-sim-to-real pipeline (X-Sim style): phone video → COLMAP → 2D Gaussian Splatting → watertight mesh → SAPIEN/ManiSkill scene with CoACD collision and auto-generated URDF.
-- Integrated Gaussian-splat environments into Isaac Lab and a Neuromeka NAMI platform (USD scene swap, Zenoh messaging) for sim-trained grasping policies on a mobile dual-arm robot.
-- Set up Unitree Z1 and G1 developer workflows (SDK build, DDS low/high-level control) and Isaac Lab across lab GPUs.

@@ -8,7 +8,7 @@ excerpt: 'arXiv preprint, September 2026'
 date: 2026-09-29
 venue: 'arXiv preprint'
 paperurl: 'https://arxiv.org/abs/2609.36605'
-citation: 'Yuzhou Wu, Longteng Fan, Zimeng Li, Yu Wanchan, Ting Zhang, Yiyang Ma, Shihao Li, Wei Ying, Jianbin Qin, Jiajian Jing, Fangwen Chen, Yifan Wu, Zichen Zhang, Ruiqi Yang, Weibin Kong, Yihang Xu, <b>Haoran Liu</b>, Zonghang He, Xuyang Liu, YiFan Xiong, Siteng Huang, Tao Xu, Zhuo Xu, Long Chen, Ruoxiang Li. RoboChrono: A Real Robot Benchmark for Streaming Task Understanding. <i>arXiv preprint</i>. arXiv preprint, September 2026.'
+citation: 'Yuzhou Wu, Longteng Fan, Zimeng Li, Yu Wanchan, Ting Zhang, Yiyang Ma, Shihao Li, Wei Ying, Jianbin Qin, Jiajian Jing, Fangwen Chen, Yifan Wu, Zichen Zhang, Ruiqi Yang, Weibin Kong, Yihang Xu, <b>Haoran Liu</b>, Zonghang He, Xuyang Liu, YiFan Xiong, Siteng Huang, Tao Xu, Zhuo Xu, Long Chen, Ruoxiang Li. RoboChrono: A Real Robot Benchmark for Streaming Task Understanding. arXiv preprint, September 2026.'
 ---
 
 RoboChrono is a real-robot benchmark for streaming task understanding: 39 scenarios, 34,713 instances and ~25 hours of synchronized head- and wrist-camera video from two dual-arm platforms, with seven causal QA tasks (current/next action, frame and view matching, frame ordering, action time localization) evaluated on 18 VLMs.

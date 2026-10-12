@@ -180,7 +180,10 @@ def render_publication(pub: dict) -> tuple[str, str]:
     links = pub.get("links") or {}
     authors = _author_html(pub)
     sep = "" if authors.endswith(".") else "."
-    citation = f"{authors}{sep} {pub['title']}. <i>{pub['venue']}</i>. {pub['status_text']}."
+    if pub["status"] == "published":
+        citation = f"{authors}{sep} {pub['title']}. <i>{pub['venue']}</i>."
+    else:
+        citation = f"{authors}{sep} {pub['title']}. {pub['status_text']}."
     fields = [
         ("title", _yq(pub["title"])),
         ("collection", "publications"),
@@ -223,11 +226,6 @@ def render_portfolio(exp: dict) -> tuple[str, str]:
         ("permalink", f"/portfolio/{page['slug']}"),
     ]
     body = [page["body_md"].rstrip(), ""]
-    bullets = _public_bullets(exp)
-    if bullets:
-        body.append("**Key points**\n")
-        body += [f"- {b['text']}" for b in bullets]
-        body.append("")
     return f"{page['slug']}.md", _front_matter(fields) + "\n" + "\n".join(body)
 
 
@@ -271,7 +269,8 @@ def render_cv(bank: dict) -> str:
             link = f" [[arXiv]({links['arxiv']})]"
         authors = _author_html(p)
         sep = "" if authors.endswith(".") else "."
-        out.append(f"* {authors}{sep} **{p['title']}**. <i>{p['venue']}</i>. {p['status_text']}.{link}")
+        tail = f"<i>{p['venue']}</i>." if p["status"] == "published" else f"{p['status_text']}."
+        out.append(f"* {authors}{sep} **{p['title']}**. {tail}{link}")
     out.append("")
 
     out += ["Skills", "======"]

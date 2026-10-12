@@ -6,15 +6,10 @@ collection: portfolio
 permalink: /portfolio/robomaster
 ---
 
-**Context.** HKUST RoboMaster team, Sept 2022 – Oct 2023.
+**Context.** HKUST RoboMaster team, Sep 2022 – Oct 2023.
 
 **Auto-aim.** Industrial cameras + OpenCV + YOLOv8 for armor-plate detection, with a
 predictive tracker for targets at 7–8 m. Bullet efficiency improved by roughly 80%.
 
 **Autonomous Sentinel.** A fully autonomous robot on ROS2 and FreeRTOS, fusing LiDAR, IMU,
 and camera for navigation and target engagement under competition latency constraints.
-
-**Key points**
-
-- Built the auto-aim pipeline (OpenCV + YOLOv8 on industrial cameras) with predictive target tracking at 7–8 m, improving bullet efficiency by ~80%.
-- Developed the autonomous Sentinel robot: ROS2 + FreeRTOS, LiDAR/IMU/camera sensor fusion for navigation and engagement.

@@ -8,7 +8,7 @@ excerpt: 'Under review (revision), IEEE RA-L'
 date: 2026-06-19
 venue: 'IEEE Robotics and Automation Letters (RA-L)'
 paperurl: 'https://arxiv.org/abs/2606.21600'
-citation: 'Zhigen Zhao, Mark Leggiero, Yipu Chen, <b>Haoran Liu</b>, Yifan Wu, Huishu Xue, Sirui Zhan, Ye Zhao. VQActFlow: Vector-Quantized Action Mode Steering for Multi-Task Robot Manipulation. <i>IEEE Robotics and Automation Letters (RA-L)</i>. Under review (revision), IEEE RA-L.'
+citation: 'Zhigen Zhao, Mark Leggiero, Yipu Chen, <b>Haoran Liu</b>, Yifan Wu, Huishu Xue, Sirui Zhan, Ye Zhao. VQActFlow: Vector-Quantized Action Mode Steering for Multi-Task Robot Manipulation. Under review (revision), IEEE RA-L.'
 ---
 
 VQActFlow tokenizes robot actions with a VQ-VAE and trains a diffusion transformer with Variational Flow Matching to predict categorical distributions over the codebook. Because action modes are discrete, the policy can be steered at inference time with classifier-free guidance on language and a lightweight codebook critic.

@@ -158,16 +158,34 @@ def test_render_publication_without_links_has_no_paperurl():
     assert "paperurl: 'https://arxiv.org/abs/0000.00000'" in content2
 
 
-def test_render_portfolio_filters_bullets():
+def test_render_portfolio_body_only():
     fname, content = g.render_portfolio(MINI_BANK["experiences"][0])
     assert fname == "proj-one.md"
     assert "collection: portfolio" in content
     assert "permalink: /portfolio/proj-one" in content
     assert "/images/placeholders/proj-one.svg" in content
     assert "Body **md**." in content
-    assert "Public ok bullet." in content
-    assert "Pending bullet." not in content
-    assert "Secret bullet." not in content
+    for b in ("Public ok bullet.", "Pending bullet.", "Secret bullet."):
+        assert b not in content
+
+
+def test_citation_unpublished_shows_status_not_venue_italic():
+    _, content = g.render_publication(MINI_BANK["publications"][0])
+    cit = [l for l in content.splitlines() if l.startswith("citation:")][0]
+    assert "Under review, Venue" in cit
+    assert "<i>Venue</i>" not in cit
+    cv = g.render_cv(MINI_BANK)
+    assert "<i>Venue</i>" not in cv
+
+
+def test_citation_published_shows_italic_venue():
+    pub = copy.deepcopy(MINI_BANK["publications"][1])
+    pub["status"] = "published"
+    pub["venue"] = "Venue"
+    pub["status_text"] = "Published"
+    _, content = g.render_publication(pub)
+    cit = [l for l in content.splitlines() if l.startswith("citation:")][0]
+    assert "<i>Venue</i>" in cit
 
 
 def test_render_cv_skips_hold_and_private():

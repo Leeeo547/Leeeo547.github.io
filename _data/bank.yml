@@ -87,7 +87,7 @@ publications:
       - {text: "Ran all baseline and VLM evaluations (HANDLOOM reproduction; zero-shot GPT-5.2 / Claude Opus 4.6 / Qwen2.5-VL-72B) and the ablation study.", own: lead}
       - {text: "Built the Kinova Gen3 + RealSense D435i cable-extraction demo (90% success).", own: lead}
       - {text: "Co-developed the ~35k-scene synthetic data pipeline (procedural cables, mass–spring relaxation, Blender rendering, auto-annotation) and the 100-scene real MDLO benchmark.", own: co}
-      - {text: "Led writing and rebuttal across the ECCV 2026 and RA-L submissions; owned multi-GPU training infrastructure on Georgia Tech PACE.", own: lead}
+      - {text: "Led manuscript writing and reviewer rebuttals; owned multi-GPU training infrastructure on Georgia Tech PACE.", own: lead}
     selected: true
     visibility: public
 
@@ -241,7 +241,7 @@ experiences:
     visibility: public
 
   - id: ha
-    org: Prof. Sehoon Ha's Lab, Georgia Institute of Technology
+    org: Georgia Institute of Technology
     role: Graduate Research Assistant
     start: 2026-01
     end: present
@@ -305,7 +305,7 @@ experiences:
       teaser: /images/placeholders/robomaster.svg
       excerpt: "Real-time perception and control on a competition robot: YOLOv8 auto-aim, predictive tracking, ROS2 + FreeRTOS autonomy."
       body_md: |
-        **Context.** HKUST RoboMaster team, Sept 2022 – Oct 2023.
+        **Context.** HKUST RoboMaster team, Sep 2022 – Oct 2023.
 
         **Auto-aim.** Industrial cameras + OpenCV + YOLOv8 for armor-plate detection, with a
         predictive tracker for targets at 7–8 m. Bullet efficiency improved by roughly 80%.

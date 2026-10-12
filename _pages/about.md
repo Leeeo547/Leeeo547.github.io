@@ -30,7 +30,7 @@ Selected publications
 
 Selected projects
 ======
-{% for item in site.portfolio %}
+{% for post in site.portfolio %}
   {% include archive-single.html %}
 {% endfor %}
 <a href="{{ base_path }}/portfolio/">All projects →</a>

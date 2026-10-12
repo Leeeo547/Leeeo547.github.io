@@ -25,7 +25,7 @@ Research & Work Experience
 * **Research Intern**, General Intelligence Machine (GIM) — Jun 2026 – present
   * Built RoboChrono, a real-robot benchmark for streaming task understanding (39 scenarios, 34.7k instances, 18 VLMs evaluated); led teleop data collection, annotation protocol, and the VLM evaluation harness.
   * Operate GIM's dual-arm whole-workspace platform with VR teleoperation for data collection and policy evaluation.
-* **Graduate Research Assistant**, Prof. Sehoon Ha's Lab, Georgia Institute of Technology (PI: Prof. Sehoon Ha) — Jan 2026 – present
+* **Graduate Research Assistant**, Georgia Institute of Technology (PI: Prof. Sehoon Ha) — Jan 2026 – present
   * Built a real-to-sim-to-real pipeline (X-Sim style): phone video → COLMAP → 2D Gaussian Splatting → watertight mesh → SAPIEN/ManiSkill scene with CoACD collision and auto-generated URDF.
   * Integrated Gaussian-splat environments into Isaac Lab and a Neuromeka NAMI platform (USD scene swap, Zenoh messaging) for sim-trained grasping policies on a mobile dual-arm robot.
   * Set up Unitree Z1 and G1 developer workflows (SDK build, DDS low/high-level control) and Isaac Lab across lab GPUs.
@@ -47,9 +47,9 @@ Research & Work Experience
 
 Publications
 ======
-* <b>Haoran Liu*</b>, et al. **DLONet: Local-to-Global Consistent Occlusion Ordering for Multi-Cable Harness Perception**. <i>IEEE Robotics and Automation Letters (RA-L)</i>. Under review, IEEE RA-L.
-* Zhigen Zhao, Mark Leggiero, Yipu Chen, <b>Haoran Liu</b>, Yifan Wu, Huishu Xue, Sirui Zhan, Ye Zhao. **VQActFlow: Vector-Quantized Action Mode Steering for Multi-Task Robot Manipulation**. <i>IEEE Robotics and Automation Letters (RA-L)</i>. Under review (revision), IEEE RA-L. [[arXiv](https://arxiv.org/abs/2606.21600)]
-* Yuzhou Wu, Longteng Fan, Zimeng Li, Yu Wanchan, Ting Zhang, Yiyang Ma, Shihao Li, Wei Ying, Jianbin Qin, Jiajian Jing, Fangwen Chen, Yifan Wu, Zichen Zhang, Ruiqi Yang, Weibin Kong, Yihang Xu, <b>Haoran Liu</b>, Zonghang He, Xuyang Liu, YiFan Xiong, Siteng Huang, Tao Xu, Zhuo Xu, Long Chen, Ruoxiang Li. **RoboChrono: A Real Robot Benchmark for Streaming Task Understanding**. <i>arXiv preprint</i>. arXiv preprint, September 2026. [[arXiv](https://arxiv.org/abs/2609.36605)]
+* <b>Haoran Liu*</b>, et al. **DLONet: Local-to-Global Consistent Occlusion Ordering for Multi-Cable Harness Perception**. Under review, IEEE RA-L.
+* Zhigen Zhao, Mark Leggiero, Yipu Chen, <b>Haoran Liu</b>, Yifan Wu, Huishu Xue, Sirui Zhan, Ye Zhao. **VQActFlow: Vector-Quantized Action Mode Steering for Multi-Task Robot Manipulation**. Under review (revision), IEEE RA-L. [[arXiv](https://arxiv.org/abs/2606.21600)]
+* Yuzhou Wu, Longteng Fan, Zimeng Li, Yu Wanchan, Ting Zhang, Yiyang Ma, Shihao Li, Wei Ying, Jianbin Qin, Jiajian Jing, Fangwen Chen, Yifan Wu, Zichen Zhang, Ruiqi Yang, Weibin Kong, Yihang Xu, <b>Haoran Liu</b>, Zonghang He, Xuyang Liu, YiFan Xiong, Siteng Huang, Tao Xu, Zhuo Xu, Long Chen, Ruoxiang Li. **RoboChrono: A Real Robot Benchmark for Streaming Task Understanding**. arXiv preprint, September 2026. [[arXiv](https://arxiv.org/abs/2609.36605)]
 
 Skills
 ======
