@@ -55,9 +55,9 @@ education:
     start: 2021-09
     end: 2025-06
     gpa: ""
+    honors: "First Class Honours"
     location: Hong Kong
-    notes:
-      - "First Class Honours"
+    notes: []
 
 publications:
   - id: dlonet

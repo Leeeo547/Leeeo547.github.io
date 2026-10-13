@@ -397,7 +397,8 @@ def render_cv(bank: dict, site_root: Path | None = None) -> str:
     for ed in bank.get("education") or []:
         end = _fmt_month(ed["end"]) + (" (expected)" if ed.get("expected") else "")
         gpa = f" GPA {ed['gpa']}." if ed.get("gpa") else ""
-        out.append(f"* **{ed['degree']} in {ed['field']}**, {ed['school']}, {_fmt_month(ed['start'])} – {end}.{gpa}")
+        honors = f", {ed['honors']}" if ed.get("honors") else ""
+        out.append(f"* **{ed['degree']} in {ed['field']}**{honors}, {ed['school']}, {_fmt_month(ed['start'])} – {end}.{gpa}")
         for n in ed.get("notes") or []:
             out.append(f"  * {n}")
     out.append("")
