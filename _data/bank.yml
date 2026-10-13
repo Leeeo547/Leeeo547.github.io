@@ -30,7 +30,7 @@ profile:
     work is validated on real robots, including Kinova Gen3, Unitree G1, ALOHA-style
     bimanual arms, and GIM's dual-arm platform.
 
-    Before Georgia Tech I studied Mathematics at HKUST (BSc, top 10%), with remote research collaborations at UC Berkeley and ETH Zurich.
+    Before Georgia Tech I studied Mathematics at HKUST (BSc, First Class Honours), with remote research collaborations at UC Berkeley and ETH Zurich.
   interests:
     - Robot manipulation and vision-language-action models
     - Reward and value models for VLA post-training
@@ -54,9 +54,10 @@ education:
     field: Mathematics
     start: 2021-09
     end: 2025-06
-    gpa: "3.8/4.3, top 10%"
+    gpa: ""
     location: Hong Kong
-    notes: []
+    notes:
+      - "First Class Honours"
 
 publications:
   - id: dlonet
