@@ -15,7 +15,7 @@ redirect_from:
 
 Education
 ======
-* **MSc in Robotics (College of Computing)**, Georgia Institute of Technology, Aug 2025 – May 2027 (expected). GPA 4.0/4.0.
+* **MSc in Robotics (College of Computing)**, Georgia Institute of Technology, Aug 2025 – May 2027 (expected). GPA 3.88/4.0.
   * Coursework: Deep Reinforcement Learning, Deep Learning (CS 7643), Probabilistic Graphical Models, Autonomous Mobile Robots, Machine Learning (CS 7641)
   * Graduate Teaching Assistant, Fall 2026
 * **BSc in Mathematics**, The Hong Kong University of Science and Technology, Sep 2021 – Jun 2025. GPA 3.8/4.3, top 10%.

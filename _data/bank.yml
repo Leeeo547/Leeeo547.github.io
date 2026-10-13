@@ -44,7 +44,7 @@ education:
     start: 2025-08
     end: 2027-05
     expected: true
-    gpa: "4.0/4.0"
+    gpa: "3.88/4.0"
     location: Atlanta, GA
     notes:
       - "Coursework: Deep Reinforcement Learning, Deep Learning (CS 7643), Probabilistic Graphical Models, Autonomous Mobile Robots, Machine Learning (CS 7641)"
