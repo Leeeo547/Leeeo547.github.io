@@ -97,9 +97,9 @@ publications:
     me: Haoran Liu
     author_note: ""
     venue: IEEE Robotics and Automation Letters (RA-L)
-    status: under_review
-    status_text: "Under review (revision), IEEE RA-L"
-    category: manuscripts
+    status: published
+    status_text: "Accepted, IEEE Robotics and Automation Letters (RA-L), 2026"
+    category: published
     date: 2026-06-19
     links:
       arxiv: https://arxiv.org/abs/2606.21600
@@ -120,7 +120,7 @@ publications:
       - {text: "Ran the ALOHA-style bimanual experiments (four contact-rich tasks, 75 demos/task).", own: lead}
       - {text: "Engineered inference latency to 155–350 ms per action chunk on an RTX 5090.", own: lead}
       - {text: "Contributed to the VQ-VAE tokenizer, VFM objective, guidance (CFG + codebook critic), and matched-protocol baseline reproduction (CFM, MT-ACT, VQ-BeT, Discrete Policy + CFG).", own: co}
-      - {text: "Co-wrote the manuscript and the RA-L revision.", own: lead}
+      - {text: "Co-wrote the manuscript and led the RA-L revision.", own: lead}
     selected: true
     visibility: public
 
@@ -211,7 +211,7 @@ experiences:
     kind: research
     tags: [VLA, RL, data, writing]
     bullets:
-      - {text: "Co-author of VQActFlow (RA-L, in revision): led LIBERO experiments, Unitree G1 teleop data and deployment, ALOHA-style bimanual experiments, and latency engineering.", tags: [VLA, real-robot], own: lead, visibility: public, status: ok}
+      - {text: "Co-author of VQActFlow (IEEE RA-L 2026): led LIBERO experiments, Unitree G1 teleop data and deployment, ALOHA-style bimanual experiments, and latency engineering.", tags: [VLA, real-robot], own: lead, visibility: public, status: ok}
       - {text: "Reward modeling for VLA post-training: LoRA-finetuned Qwen3-VL-8B-Instruct for sub-task segmentation and success classification on LIBERO-Spatial; Qwen2.5-VL chain-of-thought reward labeling (criteria → description → analysis → rating).", tags: [VLA, RL], own: lead, visibility: public, status: ok}
       - {text: "Distilling VLM judgments into lightweight real-time reward models for iterative RL post-training; surveyed and benchmarked recent reward/value-model work (SCORE, ARM, LRM, SARM2, ReTVL, …) and the RBM-1M / Robometer datasets.", tags: [RL, data], own: lead, visibility: public, status: ok}
       - {text: "Ongoing: coffee-agent, a self-evolving agent that learns a pour-over coffee routine on a real robot, with a critic/reward model guiding policy updates during out-of-distribution exploration.", tags: [RL, real-robot], own: lead, visibility: public, status: ok}

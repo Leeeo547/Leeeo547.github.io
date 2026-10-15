@@ -30,7 +30,7 @@ Research & Work Experience
   * Integrated Gaussian-splat environments into Isaac Lab and a Neuromeka NAMI platform (USD scene swap, Zenoh messaging) for sim-trained grasping policies on a mobile dual-arm robot.
   * Set up Unitree Z1 and G1 developer workflows (SDK build, DDS low/high-level control) and Isaac Lab across lab GPUs.
 * **Graduate Research Assistant**, LIDAR Lab, Georgia Institute of Technology (PI: Prof. Ye Zhao) — Aug 2025 – present
-  * Co-author of VQActFlow (RA-L, in revision): led LIBERO experiments, Unitree G1 teleop data and deployment, ALOHA-style bimanual experiments, and latency engineering.
+  * Co-author of VQActFlow (IEEE RA-L 2026): led LIBERO experiments, Unitree G1 teleop data and deployment, ALOHA-style bimanual experiments, and latency engineering.
   * Reward modeling for VLA post-training: LoRA-finetuned Qwen3-VL-8B-Instruct for sub-task segmentation and success classification on LIBERO-Spatial; Qwen2.5-VL chain-of-thought reward labeling (criteria → description → analysis → rating).
   * Distilling VLM judgments into lightweight real-time reward models for iterative RL post-training; surveyed and benchmarked recent reward/value-model work (SCORE, ARM, LRM, SARM2, ReTVL, …) and the RBM-1M / Robometer datasets.
   * Ongoing: coffee-agent, a self-evolving agent that learns a pour-over coffee routine on a real robot, with a critic/reward model guiding policy updates during out-of-distribution exploration.
@@ -47,8 +47,8 @@ Research & Work Experience
 
 Publications
 ======
+* Zhigen Zhao, Mark Leggiero, Yipu Chen, <b>Haoran Liu</b>, Yifan Wu, Huishu Xue, Sirui Zhan, Ye Zhao. **VQActFlow: Vector-Quantized Action Mode Steering for Multi-Task Robot Manipulation**. <i>IEEE Robotics and Automation Letters (RA-L)</i>, 2026. [[arXiv](https://arxiv.org/abs/2606.21600)]
 * <b>Haoran Liu*</b>, et al. **DLONet: Local-to-Global Consistent Occlusion Ordering for Multi-Cable Harness Perception**. Under review, IEEE RA-L.
-* Zhigen Zhao, Mark Leggiero, Yipu Chen, <b>Haoran Liu</b>, Yifan Wu, Huishu Xue, Sirui Zhan, Ye Zhao. **VQActFlow: Vector-Quantized Action Mode Steering for Multi-Task Robot Manipulation**. Under review (revision), IEEE RA-L. [[arXiv](https://arxiv.org/abs/2606.21600)]
 * Yuzhou Wu, Longteng Fan, Zimeng Li, Yu Wanchan, Ting Zhang, Yiyang Ma, Shihao Li, Wei Ying, Jianbin Qin, Jiajian Jing, Fangwen Chen, Yifan Wu, Zichen Zhang, Ruiqi Yang, Weibin Kong, Yihang Xu, <b>Haoran Liu</b>, Zonghang He, Xuyang Liu, YiFan Xiong, Siteng Huang, Tao Xu, Zhuo Xu, Long Chen, Ruoxiang Li. **RoboChrono: A Real Robot Benchmark for Streaming Task Understanding**. arXiv preprint, September 2026. [[arXiv](https://arxiv.org/abs/2609.36605)]
 
 Skills

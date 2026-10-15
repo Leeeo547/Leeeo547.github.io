@@ -322,7 +322,7 @@ def render_publication(pub: dict) -> tuple[str, str]:
     authors = _author_html(pub)
     sep = "" if authors.endswith(".") else "."
     if pub["status"] == "published":
-        citation = f"{authors}{sep} {pub['title']}. <i>{pub['venue']}</i>."
+        citation = f"{authors}{sep} {pub['title']}. <i>{pub['venue']}</i>, {_parse_date(pub['date']).year}."
     else:
         citation = f"{authors}{sep} {pub['title']}. {pub['status_text']}."
     fields = [
@@ -424,7 +424,7 @@ def render_cv(bank: dict, site_root: Path | None = None) -> str:
             link = f" [[arXiv]({links['arxiv']})]"
         authors = _author_html(p)
         sep = "" if authors.endswith(".") else "."
-        tail = f"<i>{p['venue']}</i>." if p["status"] == "published" else f"{p['status_text']}."
+        tail = f"<i>{p['venue']}</i>, {_parse_date(p['date']).year}." if p["status"] == "published" else f"{p['status_text']}."
         out.append(f"* {authors}{sep} **{p['title']}**. {tail}{link}")
     out.append("")
 
